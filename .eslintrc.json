@@ -1,0 +1,26 @@
+{
+  "extends": ["eslint:recommended", "plugin:import/errors", "prettier"],
+  "rules": {
+    "no-console": 1,
+    "prefer-const": 2,
+    "no-unused-vars": "warn",
+
+    "react/jsx-uses-react": "error",
+    "react/jsx-uses-vars": "error"
+  },
+  "plugins": ["react"],
+  "parser": "@babel/eslint-parser",
+  "parserOptions": {
+    "ecmaVersion": 2019,
+    "sourceType": "module",
+    "requireConfigFile": false
+  },
+  "env": {
+    "commonjs": true,
+    "noUnusedLocals": false,
+    "browser": true,
+    "es6": true,
+    "node": true,
+    "jest": true
+  }
+}
