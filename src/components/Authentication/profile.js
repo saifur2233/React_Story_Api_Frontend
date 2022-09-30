@@ -52,36 +52,42 @@ const profile = () => {
   const [updateShow, setUpdateShow] = useState(false);
   const handleUpdateClose = () => setUpdateShow(false);
   const handleUpdateShow = () => setUpdateShow(true);
-  const [fullname, setFullname] = useState('');
-  const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [password, setPassword] = useState('');
 
+  const [currentUserid, setCurrentUserid] = useState('');
   const [userData, setUserData] = useState('');
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
 
-  // show the user profile data
   const getUserData = async () => {
     axios
       .get('http://localhost:3001/api/v1/users/' + auth.user)
       .then(function (response) {
         setUserData(response.data);
+        setCurrentUserid(response.data.id);
+        setName(response.data.name);
+        setPhoneNumber(response.data.phoneNumber);
       })
       .catch(function (error) {
         console.log(error);
       });
   };
 
-  //user create a post
+  useEffect(() => {
+    getUserData();
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     await axios({
       method: 'post',
-      url: 'http://localhost:3001/api/v1/posts',
+      url: 'http://localhost:3001/api/v1/stories',
       data: {
         title: title,
-        username: auth.user,
         description: description,
       },
       withCredentials: true,
@@ -100,17 +106,15 @@ const profile = () => {
   //update user info
   const handleUpdateSubmit = async (e) => {
     e.preventDefault();
-
     await axios({
       method: 'put',
-      url: 'http://localhost:3001/api/v1/users/' + auth.user,
+      url: 'http://localhost:3001/api/v1/users/' + currentUserid,
       data: {
-        name: fullname,
-        email: email,
+        name: name,
+        phoneNumber: phoneNumber,
+        password: password,
       },
-      // headers: {
-      //   Authorization: 'Bearer ' + mycookie,
-      // },
+      withCredentials: true,
     })
       .then(function () {
         alert('Successfully User Info updated');
@@ -126,10 +130,6 @@ const profile = () => {
     navigate('/');
   };
 
-  useEffect(() => {
-    getUserData();
-  }, []);
-
   return (
     <>
       <div style={myStyle}>
@@ -142,10 +142,9 @@ const profile = () => {
                 </div>
               </div>
               <h4>Full Name: {userData.name}</h4>
-              <h5>Username : {userData.username}</h5>
               <h5>Email: {userData.email}</h5>
-              <h5>Profile Created At: {userData.createdAt}</h5>
-              <h5>Profile Updated At: {userData.updatedAt}</h5>
+              <h5>Phone Number : {userData.phoneNumber}</h5>
+              <h5>Profile Created At: {userData.created_At}</h5>
             </Card.Body>
             <Card.Footer>
               <Button variant="outline-primary" onClick={handleUpdateShow}>
@@ -154,9 +153,9 @@ const profile = () => {
               <Button variant="outline-warning" onClick={handleShow}>
                 Create Posts
               </Button>{' '}
-              <Button style={{ float: 'right' }} variant="outline-danger">
+              <Button style={{ float: 'right' }} variant="danger" disabled>
                 Delete
-              </Button>{' '}
+              </Button>
               <Button
                 style={{ float: 'right' }}
                 onClick={handleSignout}
@@ -204,7 +203,7 @@ const profile = () => {
                   />
                 </Form.Group>
                 <Button variant="primary" type="submit">
-                  Save Changes
+                  Publish
                 </Button>
                 <Button variant="danger" onClick={handleClose}>
                   Close
@@ -225,22 +224,35 @@ const profile = () => {
                   <Form.Label>Name</Form.Label>
                   <Form.Control
                     type="text"
-                    placeholder="Fullname"
-                    id="fullname"
-                    onChange={(e) => setFullname(e.target.value)}
-                    value={fullname}
+                    placeholder="Name"
+                    id="name"
+                    onChange={(e) => setName(e.target.value)}
+                    value={name}
+                    autoFocus
+                    required
+                  />
+                </Form.Group>
+
+                <Form.Group className="mb-3">
+                  <Form.Label>Phone Number</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Phone Number"
+                    id="phoneNumber"
+                    onChange={(e) => setPhoneNumber(e.target.value)}
+                    value={phoneNumber}
                     autoFocus
                     required
                   />
                 </Form.Group>
                 <Form.Group className="mb-3">
-                  <Form.Label>Email</Form.Label>
+                  <Form.Label>Password</Form.Label>
                   <Form.Control
                     type="text"
-                    placeholder="Email"
-                    id="email"
-                    onChange={(e) => setEmail(e.target.value)}
-                    value={email}
+                    placeholder="Password"
+                    id="password"
+                    onChange={(e) => setPassword(e.target.value)}
+                    value={password}
                     autoFocus
                     required
                   />

@@ -23,7 +23,7 @@ const allBlogs = () => {
 
   const getData = async () => {
     await axios
-      .get('http://localhost:3001/api/v1/posts')
+      .get('http://localhost:3001/api/v1/stories')
       .then(function (response) {
         setMyBlog(response.data);
       })
@@ -40,7 +40,7 @@ const allBlogs = () => {
 
     setMyBlog('');
     await axios
-      .get('http://localhost:3001/api/v1/posts/' + searchAuthor)
+      .get('http://localhost:3001/api/v1/stories/' + searchAuthor)
       .then(function (response) {
         setMyBlog(response.data);
       })
@@ -56,10 +56,6 @@ const allBlogs = () => {
     getData();
   }, []);
 
-  // useEffect(() => {
-  //   searchAuthorBlogs();
-  // }, []);
-
   return (
     <div style={backgroundColor}>
       <Container className="py-5">
@@ -71,7 +67,7 @@ const allBlogs = () => {
             <Form onSubmit={searchAuthorBlogs}>
               <InputGroup size="lg" className="mb-3">
                 <Form.Control
-                  placeholder="Author's username"
+                  placeholder="Author Email"
                   type="text"
                   id="searchAuthor"
                   autoComplete="off"
@@ -88,44 +84,42 @@ const allBlogs = () => {
         </div>
         <Row xs={1} md={3} className="g-4">
           {myblog &&
-            myblog
-              .map((blog, index) => (
-                <Col>
-                  <Card key={index} border="info" style={{ height: '21rem' }}>
-                    <Card.Body>
-                      <Card.Title>
-                        {blog.title.length < 30
-                          ? `${blog.title}`
-                          : `${blog.title.substring(0, 28)}`}
-                        ...
-                      </Card.Title>
-                      <Card.Subtitle className="mb-2 text-muted">
-                        <i>Author: {blog.username}</i>
-                      </Card.Subtitle>
-                      <Card.Text>
-                        {blog.description.length < 235
-                          ? `${blog.description}`
-                          : `${blog.description.substring(0, 235)}`}
-                        .....
-                      </Card.Text>
-                      <Button
-                        variant="outline-primary"
-                        onClick={() => {
-                          navigate(`/blog/${blog.id}`);
-                        }}
-                      >
-                        Read More
-                      </Button>{' '}
-                    </Card.Body>
-                    <Card.Footer>
-                      <small className="text-muted">
-                        Last updated {blog.updatedAt}
-                      </small>
-                    </Card.Footer>
-                  </Card>
-                </Col>
-              ))
-              .reverse()}
+            myblog.map((blog) => (
+              <Col>
+                <Card key={blog.id} border="info" style={{ height: '21rem' }}>
+                  <Card.Body>
+                    <Card.Title>
+                      {blog.title.length < 30
+                        ? `${blog.title}`
+                        : `${blog.title.substring(0, 28)}`}
+                      ...
+                    </Card.Title>
+                    <Card.Subtitle className="mb-2 text-muted">
+                      <i>Author: {blog.authorEmail}</i>
+                    </Card.Subtitle>
+                    <Card.Text>
+                      {blog.description.length < 235
+                        ? `${blog.description}`
+                        : `${blog.description.substring(0, 235)}`}
+                      .....
+                    </Card.Text>
+                    <Button
+                      variant="outline-primary"
+                      onClick={() => {
+                        navigate(`/blog/${blog.id}`);
+                      }}
+                    >
+                      Read More
+                    </Button>{' '}
+                  </Card.Body>
+                  <Card.Footer>
+                    <small className="text-muted">
+                      Created At: {blog.createdAt}
+                    </small>
+                  </Card.Footer>
+                </Card>
+              </Col>
+            ))}
         </Row>
       </Container>
     </div>

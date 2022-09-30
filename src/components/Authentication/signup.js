@@ -33,23 +33,22 @@ const signup = () => {
 
   const auth = useAuth();
   const navigate = useNavigate();
-  const [fullname, setFullname] = useState('');
-  const [username, setUsername] = useState('');
+  const [name, setName] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [email, setEmail] = useState('');
-  const [pwd, setPwd] = useState('');
+  const [password, setPassword] = useState('');
   const [confirmPwd, setConfirmPwd] = useState('');
 
   const [errMsg, setErrMsg] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (pwd !== confirmPwd) {
+    if (password !== confirmPwd) {
       return setErrMsg("Password don't match!");
     }
     try {
       setErrMsg('');
-      await auth.registration(fullname, username, email, pwd);
+      await auth.registration(name, email, password, phoneNumber);
       navigate('/');
     } catch (error) {
       setErrMsg(error);
@@ -70,22 +69,20 @@ const signup = () => {
                 <Form.Control
                   type="text"
                   placeholder="Enter your Name"
-                  id="fullname"
+                  id="name"
                   autoComplete="off"
-                  onChange={(e) => setFullname(e.target.value)}
-                  value={fullname}
+                  onChange={(e) => setName(e.target.value)}
                   required
                 />
               </Form.Group>
               <Form.Group className="mb-3">
-                <Form.Label>Username</Form.Label>
+                <Form.Label>Phone Number</Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder="Enter your Username"
-                  id="username"
+                  placeholder="Enter your Phone Number"
+                  id="phoneNumber"
                   autoComplete="off"
-                  onChange={(e) => setUsername(e.target.value)}
-                  value={username}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
                   required
                 />
               </Form.Group>
@@ -97,7 +94,6 @@ const signup = () => {
                   id="email"
                   autoComplete="off"
                   onChange={(e) => setEmail(e.target.value)}
-                  value={email}
                   required
                 />
               </Form.Group>
@@ -106,10 +102,9 @@ const signup = () => {
                 <Form.Label>Password</Form.Label>
                 <Form.Control
                   type="password"
-                  placeholder="Enter your Password"
+                  placeholder="Password must have 1 higher letter, 1 lower case, 1 digit"
                   id="password"
-                  onChange={(e) => setPwd(e.target.value)}
-                  value={pwd}
+                  onChange={(e) => setPassword(e.target.value)}
                   required
                 />
               </Form.Group>
@@ -118,10 +113,9 @@ const signup = () => {
                 <Form.Label>Confirm Password</Form.Label>
                 <Form.Control
                   type="password"
-                  placeholder="Confirm Password"
+                  placeholder="Retype Password"
                   id="confirm_pwd"
                   onChange={(e) => setConfirmPwd(e.target.value)}
-                  value={confirmPwd}
                   required
                 />
               </Form.Group>

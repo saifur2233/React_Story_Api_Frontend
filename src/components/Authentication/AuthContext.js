@@ -8,73 +8,68 @@ export const AuthProvider = ({ children }) => {
 
   const fetchData = async () => {
     const response = await axios.get(
-      'http://localhost:3001/api/v1/verifyuser/',
+      'http://localhost:3001/api/v1/verifyuser',
       { withCredentials: true }
     );
-    //console.log(response.data);
-    if (response.data.myusername) setUser(response.data.myusername);
+
+    if (response.data) setUser(response.data);
     else setUser('');
   };
+
   useEffect(() => {
     fetchData();
-  });
+  }, []);
 
-  const login = async (username, password) => {
-    //console.log(username, password);
+  const login = async (email, password) => {
     await axios
       .post(
-        'http://localhost:3001/api/v1/signin/',
-        { username, password },
+        'http://localhost:3001/api/v1/signin',
+        { email, password },
         {
           withCredentials: true,
         }
       )
       .then((response) => {
-        //console.log(response.data);
-        setUser(response.data.myusername);
+        setUser(response.data);
         setLoggedIn(true);
       })
       .catch((err) => {
-        //console.log(err);
         setUser(null);
         setLoggedIn(false);
       });
   };
 
-  const emptyCookie = async () => {
-    console.log('logout 3');
-    await axios.post('http://localhost:3001/api/v1/signout/', {
+  const registration = async (name, email, password, phoneNumber) => {
+    await axios({
+      method: 'post',
+      url: 'http://localhost:3001/api/v1/signup',
+      data: {
+        name: name,
+        email: email,
+        password: password,
+        phoneNumber: phoneNumber,
+      },
       withCredentials: true,
-    });
-  };
-  const logout = async () => {
-    console.log('logout 2');
-    emptyCookie();
-    console.log('logout 4');
-    setUser(null);
-  };
-
-  const registration = async (name, username, email, password) => {
-    //console.log(username, password);
-    await axios
-      .post(
-        'http://localhost:3001/api/v1/signup/',
-        { name, username, email, password },
-        {
-          withCredentials: true,
-        }
-      )
+    })
       .then((response) => {
-        //console.log(response.data);
-        const currentUser = response.data.myusername;
-        setUser({ ...currentUser });
+        setUser(response.data);
         setLoggedIn(true);
       })
       .catch((err) => {
-        //console.log(err);
         setUser(null);
         setLoggedIn(false);
       });
+  };
+
+  const logout = async () => {
+    await axios
+      .post('http://localhost:3001/api/v1/signout', {
+        withCredentials: true,
+      })
+      .then(() => {
+        setUser(null);
+      })
+      .catch((err) => {});
   };
 
   return (

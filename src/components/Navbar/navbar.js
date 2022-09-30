@@ -25,7 +25,6 @@ const navbar = () => {
 
   const auth = useAuth();
   const navigate = useNavigate();
-  //console.log(myDecodedToken.username);
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -35,13 +34,11 @@ const navbar = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    //console.log(title, auth.user, description);
     await axios({
       method: 'post',
-      url: 'http://localhost:3001/api/v1/posts/',
+      url: 'http://localhost:3001/api/v1/stories',
       data: {
         title: title,
-        username: auth.user,
         description: description,
       },
       withCredentials: true,
@@ -51,12 +48,15 @@ const navbar = () => {
         handleClose();
         const blogid = response.data.id;
         navigate(`/blog/${blogid}`);
-
-        //window.location.reload();
       })
       .catch(function (error) {
         alert(error.message);
       });
+  };
+
+  const handleSignout = () => {
+    auth.logout();
+    navigate('/');
   };
 
   return (
@@ -118,14 +118,7 @@ const navbar = () => {
                     </Nav.Link>
                   )}
                   {auth.user ? (
-                    <Nav.Link
-                      onClick={() => {
-                        console.log('logout 1');
-                        auth.logout();
-                        navigate('/');
-                      }}
-                      style={itemColor}
-                    >
+                    <Nav.Link onClick={handleSignout} style={itemColor}>
                       Sign Out
                     </Nav.Link>
                   ) : (
@@ -156,7 +149,6 @@ const navbar = () => {
                   placeholder="Blog Title"
                   id="title"
                   onChange={(e) => setTitle(e.target.value)}
-                  value={title}
                   autoFocus
                   required
                 />
@@ -167,7 +159,6 @@ const navbar = () => {
                   as="textarea"
                   id="description"
                   onChange={(e) => setDescription(e.target.value)}
-                  value={description}
                   rows={3}
                   required
                 />

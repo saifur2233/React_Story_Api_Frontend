@@ -28,7 +28,7 @@ const signin = () => {
     color: '#999999',
   };
 
-  const [user, setUser] = useState('');
+  const [email, setEmail] = useState('');
   const [pwd, setPwd] = useState('');
   const [errMsg, setErrMsg] = useState('');
   const navigate = useNavigate();
@@ -36,13 +36,16 @@ const signin = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    //console.log(user, pwd);
     try {
-      auth.login(user, pwd);
+      auth.login(email, pwd);
       navigate('/');
     } catch (error) {
       setErrMsg(error);
     }
+  };
+
+  const moveSignUp = () => {
+    navigate('/signup');
   };
 
   return (
@@ -55,14 +58,14 @@ const signin = () => {
           <Card.Body>
             <Form onSubmit={handleSubmit}>
               <Form.Group className="mb-3">
-                <Form.Label>Username</Form.Label>
+                <Form.Label>Email</Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder="Enter Username"
-                  id="user"
+                  placeholder="Enter Email"
+                  id="email"
                   autoComplete="off"
-                  onChange={(e) => setUser(e.target.value)}
-                  value={user}
+                  onChange={(e) => setEmail(e.target.value)}
+                  value={email}
                   required
                 />
               </Form.Group>
@@ -97,7 +100,9 @@ const signin = () => {
           <Card.Footer style={footerStyle}>
             <p>
               Don't have a account?
-              <Card.Link href="/signup"> Sign Up</Card.Link>
+              <Button variant="primary" onClick={moveSignUp} size="sm">
+                Sign Up
+              </Button>
             </p>
           </Card.Footer>
         </Card>

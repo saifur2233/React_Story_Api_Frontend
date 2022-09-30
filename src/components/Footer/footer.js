@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Container } from 'react-bootstrap';
 import * as Icon from 'react-bootstrap-icons';
-import { Link } from 'react-router-dom';
+
 const footer = () => {
   return (
     <div>
@@ -33,8 +33,8 @@ const footer = () => {
                 <Icon.CardChecklist color="white" size={20} /> Blogs
               </p>
               <p>
-                <Icon.FileEarmarkPerson color="white" size={20} />{' '}
-                <Link to="/about">About</Link>
+                <Icon.FileEarmarkPerson color="white" size={20} />
+                About
               </p>
               <p>
                 <Icon.PersonLinesFill color="white" size={20} /> Contact Us

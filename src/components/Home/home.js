@@ -5,16 +5,17 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { Container } from 'react-bootstrap';
 const axios = require('axios').default;
-import Pagination from 'react-bootstrap/Pagination';
-import _ from 'lodash';
 import { useNavigate } from 'react-router-dom';
+import Pagination from 'react-bootstrap/Pagination';
 
 const ControlledCarousel = () => {
   const backgroundColor = {
     backgroundColor: '#DCDCDC',
     padding: '20px',
   };
+
   const paginationStyle = {
+    marginTop: '30px',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -26,42 +27,25 @@ const ControlledCarousel = () => {
   const [isLoding, setIsLoding] = useState(true);
   const [error, setError] = useState(null);
 
-  const pageSize = 6;
-  const [paginatedPosts, setPaginatedPosts] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-
   const getData = async () => {
     await axios
-      .get('http://localhost:3001/api/v1/posts')
+      .get('http://localhost:3001/api/v1/stories')
       .then(function (response) {
-        // handle success
         setMyBlog(response.data);
-        setPaginatedPosts(_(response.data).slice(0).take(pageSize).value());
       })
       .catch(function (error) {
-        // handle error
         setError(error.message);
-        //console.log(error);
       })
       .then(function () {
-        // always executed
         setIsLoding(false);
       });
   };
-
   useEffect(() => {
     getData();
   }, []);
 
-  const pageCount = myblog ? Math.ceil(myblog.length / pageSize) : 0;
-  if (pageCount === 1) return null;
-  const pages = _.range(1, pageCount + 1);
-  //console.log('num of pages', pages);
-  const pagination = (pageNo) => {
-    setCurrentPage(pageNo);
-    const startIndex = (pageNo - 1) * pageSize;
-    const paginatedPost = _(myblog).slice(startIndex).take(pageSize).value();
-    setPaginatedPosts(paginatedPost);
+  const hnadlePagination = async () => {
+    console.log('Clicked Pagination');
   };
 
   return (
@@ -73,9 +57,9 @@ const ControlledCarousel = () => {
 
           <Row xs={1} md={3} className="g-4">
             {myblog &&
-              paginatedPosts.map((blog, id) => (
+              myblog.map((blog) => (
                 <Col>
-                  <Card key={id} border="info" style={{ height: '21rem' }}>
+                  <Card key={blog.id} border="info" style={{ height: '21rem' }}>
                     <Card.Body>
                       <Card.Title>
                         {blog.title.length < 30
@@ -84,7 +68,7 @@ const ControlledCarousel = () => {
                         ...
                       </Card.Title>
                       <Card.Subtitle className="mb-2 text-muted">
-                        <i>Author: {blog.username}</i>
+                        <i>Author: {blog.authorEmail}</i>
                       </Card.Subtitle>
                       <Card.Text>
                         {blog.description.length < 235
@@ -103,26 +87,23 @@ const ControlledCarousel = () => {
                     </Card.Body>
                     <Card.Footer>
                       <small className="text-muted">
-                        Last updated {blog.updatedAt}
+                        Last updated {blog.createdAt}
                       </small>
                     </Card.Footer>
                   </Card>
                 </Col>
               ))}
           </Row>
+          <div style={paginationStyle}>
+            <br />
+            <Pagination size="lg" onClick={hnadlePagination}>
+              <Pagination.Item active>{1}</Pagination.Item>
+              <Pagination.Item>{2}</Pagination.Item>
+              <Pagination.Item>{3}</Pagination.Item>
+              <Pagination.Item>{4}</Pagination.Item>
+            </Pagination>
+          </div>
         </Container>
-        <div style={paginationStyle}>
-          <Pagination size="lg">
-            {pages.map((page) => (
-              <Pagination.Item
-                className={page === currentPage ? 'active' : ''}
-                onClick={() => pagination(page)}
-              >
-                {page}
-              </Pagination.Item>
-            ))}
-          </Pagination>
-        </div>
       </div>
     </>
   );

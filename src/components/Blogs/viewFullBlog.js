@@ -44,7 +44,7 @@ const viewFullBlog = () => {
 
   const viewBlogData = async () => {
     await axios
-      .get(`http://localhost:3001/api/v1/posts/search/${blogId}`)
+      .get(`http://localhost:3001/api/v1/stories/search/${blogId}`)
       .then(function (response) {
         setBlog(response.data);
         setBlogTitle(response.data.title);
@@ -60,10 +60,9 @@ const viewFullBlog = () => {
 
     await axios({
       method: 'put',
-      url: 'http://localhost:3001/api/v1/posts/' + blogId,
+      url: 'http://localhost:3001/api/v1/stories/' + blogId,
       data: {
         title: blogTitle,
-        username: auth.user,
         description: blogDescription,
       },
       withCredentials: true,
@@ -85,7 +84,7 @@ const viewFullBlog = () => {
 
     await axios({
       method: 'delete',
-      url: 'http://localhost:3001/api/v1/posts/' + blogId,
+      url: 'http://localhost:3001/api/v1/stories/' + blogId,
       withCredentials: true,
     })
       .then(function () {
@@ -107,13 +106,14 @@ const viewFullBlog = () => {
         <Card.Body>
           <Card.Title>{blog.title}</Card.Title>
           <Card.Subtitle className="mb-2 text-muted">
-            Author: {blog.username}
+            Author: {blog.authorEmail}
           </Card.Subtitle>
           <Card.Text>{blog.description}</Card.Text>
         </Card.Body>
         <Card.Footer>
-          <small className="text-muted">Last updated {blog.updatedAt}</small>
-          {auth.user == blog.username && (
+          <small className="text-muted">Last updated {blog.createdAt}</small>
+
+          {auth.user == blog.authorEmail && (
             <Button
               variant="primary"
               onClick={handleUpdateShow}
@@ -122,7 +122,8 @@ const viewFullBlog = () => {
               Update
             </Button>
           )}
-          {auth.user == blog.username && (
+
+          {auth.user == blog.authorEmail && (
             <Button
               variant="danger"
               style={{ float: 'right', marginRight: '5px' }}

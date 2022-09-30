@@ -8,7 +8,6 @@ import AllBlogs from './components/Blogs/allBlogs';
 import CreateBlog from './components/Blogs/createblog';
 import SignIn from './components/Authentication/signin';
 import SignUp from './components/Authentication/signup';
-import SignOut from './components/Authentication/signout';
 import Profile from './components/Authentication/profile';
 import ViewFullBlog from './components/Blogs/viewFullBlog';
 import Footer from './components/Footer/footer';
@@ -28,7 +27,6 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
-          <Route path="/signout" element={<SignOut />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/error" element={<Error />} />
           <Route path="/blog/:blogId" element={<ViewFullBlog />} />
